@@ -30,6 +30,9 @@ def show_levels(data):
 
 
 def perfect_word(word):
+    if word == '':
+        return ''
+
     while word[-1] == ' ':
         word = word[:-1]
 
