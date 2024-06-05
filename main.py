@@ -1,6 +1,32 @@
 from pyexcel_ods3 import save_data
 from pyexcel_ods3 import get_data
 import random
+import math
+
+
+
+def show_levels(data):
+    level = str(math.ceil(math.log2(int(data))) + 1)
+    if level == '1':
+        return 'I'
+    if level == '2':
+        return 'II'
+    if level == '3':
+        return 'III'
+    if level == '4':
+        return 'IV'
+    if level == '5':
+        return 'V'
+    if level == '6':
+        return 'VI'
+    if level == '7':
+        return 'VII'
+    if level == '8':
+        return 'VIII'
+    if level == '9':
+        return 'IX'
+    if level == '10':
+        return 'X'
 
 
 def perfect_word(word):
@@ -61,6 +87,7 @@ print("1.Turkish to Russian (options)")
 print("2.Russian to Turkish (options)")
 print("3.Turkish spelling")
 print("s.To open data settings")
+print('l. To show levels of the words')
 mode = input('Enter the mode:')
 if mode == '1':
     condition = True
@@ -146,6 +173,20 @@ if mode == 's':
         save_data("tk_words.ods", data)
         print('Column reset successfully!')
 
+if mode == 'l':
+    print('In which column do you want to see the levels?')
+    print('1.Turkish to Russian (options)')
+    print('2.Russian to Turkish (options)')
+    print('3.Turkish spelling')
+    column = input('Enter the column:')
+    data_list = []
+    for data_slice in data['Sheet1'][1:]:
+        data_list.append([data_slice[int(column) + 1], data_slice[0], data_slice[1]])
+
+    data_list.sort()
+    print('Turkish word              | Russian word                      | Level')
+    for data_slice in data_list:
+        print(f'{data_slice[1]:<25} | {data_slice[2]:<33} | {show_levels(data_slice[0])}')
 
 
 
