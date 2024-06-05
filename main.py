@@ -95,7 +95,7 @@ mode = input('Enter the mode:')
 if mode == '1':
     condition = True
     while condition:
-        weights = [1024 // int(x[2]) for x in data['Sheet1'][1:]]
+        weights = [512 // int(x[2]) for x in data['Sheet1'][1:]]
         random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
         print(random_word[0])
         actual_answer = print_random_options(data, random_word[1], 1)
@@ -115,7 +115,7 @@ if mode == '1':
 if mode == '2':
     condition = True
     while condition:
-        weights = [1024 // int(x[3]) for x in data['Sheet1'][1:]]
+        weights = [512 // int(x[3]) for x in data['Sheet1'][1:]]
         random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
         print(random_word[1])
         actual_answer = print_random_options(data, random_word[0], 2)
@@ -135,7 +135,7 @@ if mode == '2':
 if mode == '3':
     condition = True
     while condition:
-        weights = [32 // int(x[4]) for x in data['Sheet1'][1:]]
+        weights = [8 // int(x[4]) for x in data['Sheet1'][1:]]
         random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
         print(random_word[1])
         user_answer = input("Enter the answer: ")
