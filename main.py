@@ -105,7 +105,7 @@ if mode == '2':
 if mode == '3':
     condition = True
     while condition:
-        weights = [1024 // int(x[4]) for x in data['Sheet1'][1:]]
+        weights = [32 // int(x[4]) for x in data['Sheet1'][1:]]
         random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
         print(random_word[1])
         user_answer = input("Enter the answer: ")
@@ -123,6 +123,28 @@ if mode == '3':
             adjust_data(data, random_word[0], 'down', 4, 2)
 
 if mode == 's':
+    print("What do you want to do?")
+    print("1.Reset all weights")
+    print("2.Reset specific column")
+
+    action = input('Enter the action:')
+    if action == '1':
+        for data_slice in data['Sheet1'][1:]:
+            data_slice[2] = 1
+            data_slice[3] = 1
+            data_slice[4] = 1
+        save_data("tk_words.ods", data)
+        print('Weights reset successfully!')
+    if action == '2':
+        print("Which column do you want to reset?")
+        print("1.Turkish to Russian")
+        print("2.Russian to Turkish")
+        print("3.Turkish spelling")
+        column = input('Enter the column:')
+        for data_slice in data['Sheet1'][1:]:
+            data_slice[int(column) + 1] = 1
+        save_data("tk_words.ods", data)
+        print('Column reset successfully!')
 
 
 
