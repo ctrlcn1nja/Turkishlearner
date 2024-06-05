@@ -41,14 +41,14 @@ def print_random_options(data, answer, mode):
     return 'D'
 
 
-def adjust_data(data, random_word, direction, column):
+def adjust_data(data, random_word, direction, column, buff=2):
     index = 1
     for data_slice in data['Sheet1'][1:]:
         if data_slice[0] == random_word:
             if direction == 'up':
-                data['Sheet1'][index][column] = min(1024, data['Sheet1'][index][column] * 2)
+                data['Sheet1'][index][column] = min(1024, data['Sheet1'][index][column] * buff)
             else:
-                data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // 4)
+                data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // buff)
             break
         index += 1
     save_data("tk_words.ods", data)
@@ -60,6 +60,7 @@ print("What mode do you want to use?")
 print("1.Turkish to Russian (options)")
 print("2.Russian to Turkish (options)")
 print("3.Turkish spelling")
+print("s.To open data settings")
 mode = input('Enter the mode:')
 if mode == '1':
     condition = True
@@ -73,13 +74,13 @@ if mode == '1':
             print('--------------------------------------------------')
             print("Correct!")
             print('--------------------------------------------------')
-            adjust_data(data, random_word[0], 'up', 2)
+            adjust_data(data, random_word[0], 'up', 2, 2)
 
         else:
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             print("Incorrect!, the correct answer is: " + actual_answer)
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            adjust_data(data, random_word[0], 'down', 2)
+            adjust_data(data, random_word[0], 'down', 2, 4)
 
 if mode == '2':
     condition = True
@@ -93,13 +94,13 @@ if mode == '2':
             print('--------------------------------------------------')
             print("Correct!")
             print('--------------------------------------------------')
-            adjust_data(data, random_word[0], 'up', 3)
+            adjust_data(data, random_word[0], 'up', 3, 2)
 
         else:
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             print("Incorrect!, the correct answer is: " + actual_answer)
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            adjust_data(data, random_word[0], 'down', 3)
+            adjust_data(data, random_word[0], 'down', 3,4)
 
 if mode == '3':
     condition = True
@@ -112,14 +113,16 @@ if mode == '3':
             print('--------------------------------------------------')
             print("Correct!")
             print('--------------------------------------------------')
-            adjust_data(data, random_word[0], 'up', 4)
+            adjust_data(data, random_word[0], 'up', 4, 2)
 
         else:
             #print(user_answer, random_word[0].lower())
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             print("Incorrect!, the correct answer is: " + random_word[0])
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            adjust_data(data, random_word[0], 'down', 4)
+            adjust_data(data, random_word[0], 'down', 4, 2)
+
+if mode == 's':
 
 
 
