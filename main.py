@@ -134,6 +134,26 @@ if mode == '2':
 
 if mode == '3':
     condition = True
+    for data_slice in data['Sheet1'][1:]:
+        if data_slice[4] == 1:
+            break
+    else:
+        condition = False
+        print("As you maxed the level, we will go over the words")
+        ln = len(data['Sheet1'])
+        seed = [x for x in range(1, ln)]
+        random.shuffle(seed)
+        for i in seed:
+            print(data['Sheet1'][i][1])
+            user_answer = input("Enter the answer: ")
+            if perfect_word(user_answer) == perfect_word(data['Sheet1'][i][0]):
+                print('--------------------------------------------------')
+                print("Correct!")
+                print('--------------------------------------------------')
+            else:
+                print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                print("Incorrect!, the correct answer is: " + data['Sheet1'][i][0])
+                print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     while condition:
         weights = [8 // int(x[4]) for x in data['Sheet1'][1:]]
         random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
@@ -151,6 +171,9 @@ if mode == '3':
             print("Incorrect!, the correct answer is: " + random_word[0])
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             adjust_data(data, random_word[0], 'down', 4, 2)
+
+
+
 
 if mode == 's':
     print("What do you want to do?")
