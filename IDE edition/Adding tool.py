@@ -1,5 +1,7 @@
 from pyexcel_ods3 import save_data
 from pyexcel_ods3 import get_data
+import os
+os.chdir("..")
 
 data = get_data("tk_words.ods")
 stream = open("words_to_add.txt", "r", encoding="utf-8")

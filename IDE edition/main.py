@@ -2,6 +2,8 @@ from pyexcel_ods3 import save_data
 from pyexcel_ods3 import get_data
 import random
 import math
+import os
+os.chdir("..")
 
 
 

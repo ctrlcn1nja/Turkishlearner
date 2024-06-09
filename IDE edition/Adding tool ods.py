@@ -1,5 +1,7 @@
 from pyexcel_ods3 import save_data
 from pyexcel_ods3 import get_data
+import os
+os.chdir("..")
 
 name_of_input = input('Enter the name of the file you want to add: ')
 data_to_add = get_data(name_of_input)
