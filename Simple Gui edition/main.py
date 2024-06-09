@@ -1,4 +1,5 @@
 import PySimpleGUI as gui
+import  functions
 
 def main_window():
     layout = [
@@ -6,29 +7,43 @@ def main_window():
         [gui.Button("Turkish spelling"), gui.Button("Turkish to Russian (options)")],
         [gui.Button("Russian to Turkish (options)"), gui.Button("Levels")],
         ]
-    return gui.Window("Main Screen", layout)
+    window = gui.Window("Main", layout)
+    while True:
+        event, values = window.read()
+        if event == gui.WIN_CLOSED:
+            break
+        if event == "Turkish spelling":
+            window.close()
+            turkish_spelling()
+
+        if event == "Turkish to Russian (options)":
+            pass
+        if event == "Russian to Turkish (options)":
+            pass
+        if event == "Levels":
+            pass
 
 def turkish_spelling():
+    word = functions.random_word(3)
     layout = [
         [gui.Text("Welcome to the Turkish spelling screen, please select an option")],
-        [gui.Text("Word: "), gui.InputText()],
-        [gui.Button("Start"), gui.Button("Back")],
+        [gui.Text(word[1]), gui.InputText()],
+        [gui.Button("Enter"), gui.Button("Back")],
         ]
-    return gui.Window("Turkish Spelling", layout)
+    window = gui.Window("Turkish Spelling", layout)
+    while True:
+        event, values = window.read()
+        if event == gui.WIN_CLOSED:
+            break
+        if event == "Back":
+            window.close()
+            break
+        if event == "Enter" or event == "\r":
+            print(values[0])
+            #if functions.perfect_word(values[0]) == functions.perfect_word(word[0]):
+    main_window()
 
 
 
-window = main_window()
-while True:
-    event, values = window.read()
-    if event == gui.WIN_CLOSED:
-        break
-    if event == "Turkish spelling":
-        window.close()
-        window = turkish_spelling()
-    if event == "Turkish to Russian (options)":
-        pass
-    if event == "Russian to Turkish (options)":
-        pass
-    if event == "Levels":
-        pass
+main_window()
+
