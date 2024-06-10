@@ -17,6 +17,29 @@ def perfect_word(word):
         word = word[1:]
     return word.lower()
 
+def show_levels(data):
+    level = str(math.ceil(math.log2(int(data))) + 1)
+    if level == '1':
+        return 'I'
+    if level == '2':
+        return 'II'
+    if level == '3':
+        return 'III'
+    if level == '4':
+        return 'IV'
+    if level == '5':
+        return 'V'
+    if level == '6':
+        return 'VI'
+    if level == '7':
+        return 'VII'
+    if level == '8':
+        return 'VIII'
+    if level == '9':
+        return 'IX'
+    if level == '10':
+        return 'X'
+
 
 def adjust_data(random_word, direction, column, buff=2):
     data = get_data("tk_words.ods")
@@ -39,3 +62,15 @@ def random_word(mode):
     return random_word
 
 
+def levels_list(column):
+    data = get_data("tk_words.ods")
+    data_list = []
+    for data_slice in data['Sheet1'][1:]:
+        data_list.append([data_slice[int(column) + 1], data_slice[0], data_slice[1]])
+
+    data_list.sort()
+    str_list = ['Turkish' + " " * 18 + '|' + 'Russian' + " " * 18 + '|' + 'Level' + " " * 20]
+    for data_slice in data_list:
+        str_ = data_slice[1] + " " * (25 - len(data_slice[1])) + '|' + data_slice[2] + " " * (25 - len(data_slice[2])) + '|' + show_levels(data_slice[0]) + " " * (25 - len(show_levels(data_slice[0])))
+        str_list.append(str_)
+    return str_list

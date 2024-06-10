@@ -27,13 +27,14 @@ def main_window():
         if event == "Russian to Turkish (options)":
             pass
         if event == "Levels":
-            pass
+            window.close()
+            levels_window()
 
 def turkish_spelling():
     word = functions.random_word(3)
     layout = [
         [gui.Text("Welcome to the Turkish spelling screen, please select an option")],
-        [gui.Text(word[1]), gui.InputText(enable_events=True)],
+        [gui.Text(word[1]), gui.InputText(enable_events=True, focus=True)],
         [gui.Button("Enter"), gui.Button("Back")],
         ]
     window = gui.Window("Turkish Spelling", layout, return_keyboard_events=True)
@@ -60,6 +61,34 @@ def turkish_spelling():
                 functions.adjust_data(word[0], 'down', 4)
                 window.close()
                 turkish_spelling()
+
+
+def levels_window():
+    levels = functions.levels_list(3)
+    print(levels[0])
+    print(levels[1])
+    print(levels[2])
+    layout = [[gui.Listbox(values=levels, size=(100, 30), font=('courier', 12))],
+              [gui.Button("Back")],
+              ]
+    window = gui.Window("Levels", layout)
+    while True:
+        event, values = window.read()
+        if event == gui.WIN_CLOSED:
+            break
+        if event == "Back":
+            window.close()
+            main_window()
+            break
+
+
+
+
+
+
+
+
+
 
 
 
