@@ -1,6 +1,11 @@
 import PySimpleGUI as gui
+import pygame
 import  functions
-from playsound import playsound
+
+
+pygame.init()
+pygame.mixer.init()
+
 
 def main_window():
     layout = [
@@ -43,9 +48,17 @@ def turkish_spelling():
         if event == "Enter" or event == "\r":
             print(values[0])
             if functions.perfect_word(values[0]) == functions.perfect_word(word[0]):
-                gui.popup("Correct!")
-                playsound("Simple Gui edition/correct_sound.mp3")
+                pygame.mixer.music.load('correct_sound_1.wav')
+                pygame.mixer.music.play()
                 #functions.adjust_data(word[0], 'up', 4)
+                window.close()
+                turkish_spelling()
+            else:
+                pygame.mixer.music.load('wrong_answer_1.wav')
+                pygame.mixer.music.play()
+                gui.popup("Incorrect, the correct answer is: " + word[0])
+                window.close()
+                turkish_spelling()
 
 
 
