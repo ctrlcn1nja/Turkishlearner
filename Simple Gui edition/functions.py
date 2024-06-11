@@ -74,3 +74,29 @@ def levels_list(column):
         str_ = data_slice[1] + " " * (25 - len(data_slice[1])) + '|' + data_slice[2] + " " * (25 - len(data_slice[2])) + '|' + show_levels(data_slice[0]) + " " * (25 - len(show_levels(data_slice[0])))
         str_list.append(str_)
     return str_list
+
+
+def give_random_options(answer, mode):
+    data = get_data("tk_words.ods")
+    options = []
+    val = 1
+    while len(options) < 3:
+        for data_slice in data['Sheet1'][1:]:
+            if mode == 1:
+                if data_slice[2] == val and data_slice[1] != answer:
+                    options.append(data_slice[1])
+            else:
+                if data_slice[3] == val and data_slice[0] != answer:
+                    options.append(data_slice[0])
+        val *= 2
+    random.shuffle(options)
+    options = options[:3]
+    options.append(answer)
+    random.shuffle(options)
+    if options[0] == answer:
+        return options + ['A']
+    elif options[1] == answer:
+        return options + ['B']
+    elif options[2] == answer:
+        return options + ['C']
+    return options + ['D']
