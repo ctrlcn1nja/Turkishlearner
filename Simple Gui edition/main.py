@@ -21,6 +21,7 @@ def main_window():
     while True:
         event, values = window.read()
         if event == gui.WIN_CLOSED:
+            window.close()
             break
         if event == "Turkish spelling":
             window.close()
@@ -58,7 +59,6 @@ def turkish_spelling():
             main_window()
             break
         if event == "ENTER" or event == "\r":
-            print(values[0])
             if functions.perfect_word(values[0]) == functions.perfect_word(word[0]):
                 pygame.mixer.music.load('correct_sound_1.wav')
                 pygame.mixer.music.play()
@@ -106,6 +106,7 @@ def tk_to_ru_options():
     while True:
         event, values = window.read()
         if event == gui.WIN_CLOSED:
+            window.close()
             main_window()
             break
         if (event == word[1]
