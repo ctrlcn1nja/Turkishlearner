@@ -7,6 +7,11 @@ os.chdir("..") # Change the working directory to the parent directory
 
 
 def perfect_word(word):
+    list_of_words = word.split()
+    word = ''
+    for elem in list_of_words:
+        word += elem + ' '
+    word = word[:-1]
     if word == '':
         return ''
 
