@@ -67,17 +67,16 @@ def random_word(mode):
     return random_word
 
 
-def levels_list(column):
+def levels_list():
     data = get_data("tk_words.ods")
     data_list = []
     for data_slice in data['Sheet1'][1:]:
-        data_list.append([data_slice[int(column) + 1], data_slice[0], data_slice[1]])
+        data_list.append([data_slice[4], data_slice[3], data_slice[2], data_slice[0], data_slice[1]])
 
     data_list.sort()
-    str_list = ['Turkish' + " " * 18 + '|' + 'Russian' + " " * 18 + '|' + 'Level' + " " * 20]
+    str_list = ['Turkish' + " " * 18 + '|' + 'Russian' + " " * 18 + 'Levels: |Spelling|Rus-Turk|Turk-Rus|']
     for data_slice in data_list:
-        str_ = data_slice[1] + " " * (25 - len(data_slice[1])) + '|' + data_slice[2] + " " * (25 - len(data_slice[2])) + '|' + show_levels(data_slice[0]) + " " * (25 - len(show_levels(data_slice[0])))
-        str_list.append(str_)
+        str_list.append(f'{data_slice[3]:<25}|{data_slice[4]:<33}|{show_levels(data_slice[0]):>8}|{show_levels(data_slice[1]):>8}|{show_levels(data_slice[2]):>8}|')
     return str_list
 
 

@@ -81,7 +81,7 @@ def turkish_spelling():
 
 
 def levels_window():
-    levels = functions.levels_list(3)
+    levels = functions.levels_list()
     layout = [[gui.Listbox(values=levels, size=(100, 30), font=('courier', 12))],
               [gui.Button("Back")],
               ]
