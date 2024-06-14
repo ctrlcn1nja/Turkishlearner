@@ -208,44 +208,81 @@ def show_incorrect_answer_popup(correct_word):  # Ensure consistent theme across
 
 
 def settings_window():
+    global MAX_LEVELS, MAX_LEVELS_WORDS, BUFFS, DEBUFFS # Ensure that the global variables are accessible
+
     note = ("NOTE: If you reach the maximum level for all words, the program will revisit all the words, "
              "to identify any that may have become weak. "
              "After this review, the program will return to its normal mode of operation.")
 
     tab1_layout = [
-        [gui.Checkbox("Option 1", key='-OPTION1-')],
-        [gui.Checkbox("Option 2", key='-OPTION2-')]
+        [gui.Text('Select max level for a word:', font=("Helvetica", 16), size=(30, 1))],
+        [gui.Slider(range=(1, 10), default_value=MAX_LEVELS[0], orientation='h', size=(30, 15), key='-SLIDER11-',
+                    font=("Helvetica", 14))],
+        [gui.Text('Set the buff and debuff for the correct and incorrect answers accordingly:',
+                  font=("Helvetica", 16))],
+        [gui.Slider(range=(0, 3), default_value=BUFFS[0], orientation='h', size=(30, 15), key='-SLIDER12-',
+                    font=("Helvetica", 14)),
+         gui.Slider(range=(-3, 0), default_value=DEBUFFS[0], orientation='h', size=(30, 15), key='-SLIDER13-',
+                    font=("Helvetica", 14))],
+        [gui.Text('Should max-level words be still in the pool?', font=("Helvetica", 16))],
+        [gui.Radio('Yes', default=MAX_LEVELS_WORDS[0], group_id=11, key='-YES-', font=("Helvetica", 14)),
+         gui.Radio('No', default=(1 - MAX_LEVELS_WORDS[0]), group_id=11, key='-NO-', font=("Helvetica", 14))],
+        [gui.Multiline(note, size=(600, 3), font=("Helvetica", 16), no_scrollbar=True)],
     ]
 
     tab2_layout = [
-        [gui.Radio("Choice 1", "RADIO1", key='-CHOICE1-')],
-        [gui.Radio("Choice 2", "RADIO1", key='-CHOICE2-')]
-    ]
+        [gui.Text('Select max level for a word:', font=("Helvetica", 16), size=(30, 1))],
+        [gui.Slider(range=(1, 10), default_value=MAX_LEVELS[1], orientation='h', size=(30, 15), key='-SLIDER21-',
+                    font=("Helvetica", 14))],
+        [gui.Text('Set the buff and debuff for the correct and incorrect answers accordingly:',
+                  font=("Helvetica", 16))],
+        [gui.Slider(range=(0, 3), default_value=BUFFS[1], orientation='h', size=(30, 15), key='-SLIDER22-',
+                    font=("Helvetica", 14)),
+         gui.Slider(range=(-3, 0), default_value=DEBUFFS[1], orientation='h', size=(30, 15), key='-SLIDER23-',
+                    font=("Helvetica", 14))],
+        [gui.Text('Should max-level words be still in the pool?', font=("Helvetica", 16))],
+        [gui.Radio('Yes', default=MAX_LEVELS_WORDS[1], group_id=21, key='-YES-', font=("Helvetica", 14)),
+         gui.Radio('No', default=(1 - MAX_LEVELS_WORDS[1]), group_id=21, key='-NO-', font=("Helvetica", 14))],
+        [gui.Multiline(note, size=(600, 3), font=("Helvetica", 16), no_scrollbar=True)],
 
+    ]
     tab3_layout = [
         [gui.Text('Select max level for a word:', font=("Helvetica", 16), size=(30, 1))],
-        [gui.Slider(range=(1, 10), orientation='h', size=(30, 15), key='-SLIDER-', font=("Helvetica", 14))],
+        [gui.Slider(range=(1, 10), default_value=MAX_LEVELS[2], orientation='h', size=(30, 15), key='-SLIDER31-', font=("Helvetica", 14))],
+        [gui.Text('Set the buff and debuff for the correct and incorrect answers accordingly:', font=("Helvetica", 16))],
+        [gui.Slider(range=(0, 3), default_value=BUFFS[2], orientation='h', size=(30, 15), key='-SLIDER32-', font=("Helvetica", 14)), gui.Slider(range=(-3, 0), default_value=DEBUFFS[2], orientation='h', size=(30, 15), key='-SLIDER33-', font=("Helvetica", 14))],
         [gui.Text('Should max-level words be still in the pool?', font=("Helvetica", 16))],
-        [gui.Radio('Yes', group_id=1, key='-YES-', font=("Helvetica", 14)), gui.Radio('No', group_id=1, key='-NO-', font=("Helvetica", 14))],
+        [gui.Radio('Yes', default=MAX_LEVELS_WORDS[2], group_id=31, key='-YES-', font=("Helvetica", 14)), gui.Radio('No', default=(1 - MAX_LEVELS_WORDS[2]), group_id=31, key='-NO-', font=("Helvetica", 14))],
         [gui.Multiline(note, size=(600, 3), font=("Helvetica", 16), no_scrollbar=True)],
     ]
 
     settings_layout = [
         [gui.TabGroup([[gui.Tab('Turkish Spelling',  tab1_layout, font=("Helvetica", 32)), gui.Tab('Turkish to Russian (options)', tab2_layout, font=("Helvetica", 32)), gui.Tab('Russian to Turkish (options)', tab3_layout, font=("Helvetica", 32))]], size=(800, 600))],
-        [gui.Button("Save"), gui.Button("Cancel")]
+        [gui.Button("Save"), gui.Button("Cancel"), gui.Button("Reset to Default")]
     ]
 
     settings_window = gui.Window("Settings", settings_layout, finalize=True)
     while True:
         event, values = settings_window.read()
-        if event == gui.WINDOW_CLOSED or event == "Cancel":
+        if event == gui.WIN_CLOSED or event == "Cancel":
             settings_window.close()
             main_window()
             break
-        elif event == "Save":
-            # Handle saving settings here
-            gui.popup("Settings saved!")
+        if event == "Save":
+            MAX_LEVELS = [int(values['-SLIDER11-']), int(values['-SLIDER21-']), int(values['-SLIDER31-'])]
+            BUFFS = [int(values['-SLIDER12-']), int(values['-SLIDER22-']), int(values['-SLIDER32-'])]
+            DEBUFFS = [int(values['-SLIDER13-']), int(values['-SLIDER23-']), int(values['-SLIDER33-'])]
+            MAX_LEVELS_WORDS = [values['-YES-'], values['-YES-'], values['-YES-']]
+            settings_window.close()
+            main_window()
             break
+        if event == "Reset to Default":
+            MAX_LEVELS = [5, 10, 10]
+            BUFFS = [1, 1, 1]
+            DEBUFFS = [-1, -1, -1]
+            MAX_LEVELS_WORDS = [True, True, True]
+            settings_window.close()
+            settings_window()
 
 
 
@@ -254,5 +291,10 @@ def settings_window():
 
 
 if __name__ == "__main__":
+    MAX_LEVELS = [5, 10, 10]
+    BUFFS = [1, 1, 1]
+    DEBUFFS = [-1, -1, -1]
+    MAX_LEVELS_WORDS = [False, True, True]
+    # Ensure that the global variables are accessible
     main_window()
 
