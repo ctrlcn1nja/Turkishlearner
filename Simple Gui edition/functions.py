@@ -3,7 +3,7 @@ from pyexcel_ods3 import get_data
 import random
 import math
 import os
-os.chdir("..") # Change the working directory to the parent directory
+os.chdir("aditional files") # Change the working directory to the parent directory
 
 
 def perfect_word(word):
@@ -20,6 +20,7 @@ def perfect_word(word):
 
     while word[0] == ' ':
         word = word[1:]
+    #print(word.lower())
     return word.lower()
 
 def show_levels(data):
@@ -46,17 +47,36 @@ def show_levels(data):
         return 'X'
 
 
-def adjust_data(random_word, direction, column, buff=2):
+def adjust_data(random_word, direction, mode):
+    #mode 1 - Spelling, 2 - Rus-Turk, 3 - Turk-Rus
+    if mode == 1:
+        column = 4
+    elif mode == 2:
+        column = 3
+    else:
+        column = 2
+    # Even though here we can avoid if statements, I decided to keep them for the sake of clarity
     data = get_data("tk_words.ods")
     index = 1
     for data_slice in data['Sheet1'][1:]:
         if data_slice[0] == random_word:
             if direction == 'up':
+                buff = settings_get('BUFFS')[mode - 1]
                 data['Sheet1'][index][column] = min(1024, data['Sheet1'][index][column] * buff)
             else:
-                data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // buff)
+                debuff = settings_get('DEBUFFS')[mode - 1]
+                data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // debuff)
             break
         index += 1
+    save_data("tk_words.ods", data)
+
+
+def reset_levels(MAX_LEVELS):
+    data = get_data("tk_words.ods")
+    for data_slice in data['Sheet1'][1:]:
+        data_slice[3] = min(2 ** (MAX_LEVELS[2] - 1), data_slice[2]) # Rus-Turk
+        data_slice[2] = min(2 ** (MAX_LEVELS[1] - 1), data_slice[3]) # Turk-Rus
+        data_slice[4] = min(2 ** (MAX_LEVELS[0] - 1), data_slice[4]) # spelling
     save_data("tk_words.ods", data)
 
 
@@ -104,3 +124,28 @@ def give_random_options(answer, mode):
     elif options[2] == answer:
         return options + ['C']
     return options + ['D']
+
+
+
+def settings_get(key):
+    stream = open("settings.txt", "r")
+    settings = {}
+    for line in stream:
+        line = line.split()
+        settings[line[0]] = [int(line[1]), int(line[2]), int(line[3])]
+    stream.close()
+    return settings[key]
+
+def settings_set(key, value):
+    stream = open("settings.txt", "r")
+    settings = {}
+    for line in stream:
+        line = line.split()
+        settings[line[0]] = [line[1], line[2], line[3]]
+    stream.close()
+    settings[key] = value
+    stream = open("settings.txt", "w")
+    for key in settings:
+        stream.write(f'{key} {settings[key][0]} {settings[key][1]} {settings[key][2]}\n')
+    stream.close()
+

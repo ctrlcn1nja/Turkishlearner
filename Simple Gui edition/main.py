@@ -47,7 +47,7 @@ def turkish_spelling():
         [gui.Text("Welcome to the Turkish spelling screen", font=("Helvetica", 16), justification='center',
                  size=(40, 1))],
         [gui.Text("Please spell the following word:", font=("Helvetica", 16), justification='center', size=(40, 1))],
-        [gui.Text(word[1], font=("Helvetica", 18), background_color='black', justification='center', size=(28, 1))],
+        [gui.Text(word[1], font=("Helvetica", 18), background_color='black', justification='center', size=(25, 1)), gui.Button(image_filename='complete.png', key='Complete',size=(10, 1))],
         [gui.InputText(enable_events=True, focus=True, font=("Helvetica", 18), justification='center', size=(30, 1))],
         [gui.Button("BACK", size=(23, 2)), gui.Button("ENTER", size=(23, 2))]
     ]
@@ -58,6 +58,8 @@ def turkish_spelling():
         event, values = window.read()
         if event == gui.WIN_CLOSED:
             break
+        if event == "Complete":
+            functions.adjust_data(word[0], 'up', 1)
         if event == "BACK":
             window.close()
             main_window()
@@ -66,7 +68,7 @@ def turkish_spelling():
             if functions.perfect_word(values[0]) == functions.perfect_word(word[0]):
                 pygame.mixer.music.load('correct_sound_1.wav')
                 pygame.mixer.music.play()
-                functions.adjust_data(word[0], 'up', 4)
+                functions.adjust_data(word[0], 'up', 1)
                 window.close()
                 turkish_spelling()
                 break
@@ -74,7 +76,7 @@ def turkish_spelling():
                 pygame.mixer.music.load('wrong_answer_1.wav')
                 pygame.mixer.music.play()
                 show_incorrect_answer_popup(word[0])
-                functions.adjust_data(word[0], 'down', 4)
+                functions.adjust_data(word[0], 'down', 1)
                 window.close()
                 turkish_spelling()
                 break
@@ -123,7 +125,7 @@ def tk_to_ru_options():
             pygame.mixer.music.load('correct_sound_1.wav')
             pygame.mixer.music.play()
             window.close()
-            functions.adjust_data(word[0], 'up', 2)
+            functions.adjust_data(word[0], 'up', 3)
             tk_to_ru_options()
             break
         elif ((event == options[0])
@@ -138,7 +140,7 @@ def tk_to_ru_options():
             pygame.mixer.music.play()
             show_incorrect_answer_popup(word[1])
             window.close()
-            functions.adjust_data(word[0], 'down', 2)
+            functions.adjust_data(word[0], 'down', 3)
             tk_to_ru_options()
             break
 
@@ -169,7 +171,7 @@ def ru_to_tk_options():
             pygame.mixer.music.load('correct_sound_1.wav')
             pygame.mixer.music.play()
             window.close()
-            functions.adjust_data(word[0], 'up', 3)
+            functions.adjust_data(word[0], 'up', 2)
             ru_to_tk_options()
             break
         elif ((event == options[0])
@@ -184,7 +186,7 @@ def ru_to_tk_options():
             pygame.mixer.music.play()
             show_incorrect_answer_popup(word[0])
             window.close()
-            functions.adjust_data(word[0], 'down', 3)
+            functions.adjust_data(word[0], 'down', 2)
             ru_to_tk_options()
             break
 
@@ -208,7 +210,10 @@ def show_incorrect_answer_popup(correct_word):  # Ensure consistent theme across
 
 
 def settings_window():
-    global MAX_LEVELS, MAX_LEVELS_WORDS, BUFFS, DEBUFFS # Ensure that the global variables are accessible
+    MAX_LEVELS = functions.settings_get('MAX_LEVELS')
+    BUFFS = functions.settings_get('BUFFS')
+    DEBUFFS = functions.settings_get('DEBUFFS')
+    MAX_LEVELS_WORDS = functions.settings_get('MAX_LEVELS_WORDS')
 
     note = ("NOTE: If you reach the maximum level for all words, the program will revisit all the words, "
              "to identify any that may have become weak. "
@@ -269,18 +274,20 @@ def settings_window():
             main_window()
             break
         if event == "Save":
-            MAX_LEVELS = [int(values['-SLIDER11-']), int(values['-SLIDER21-']), int(values['-SLIDER31-'])]
-            BUFFS = [int(values['-SLIDER12-']), int(values['-SLIDER22-']), int(values['-SLIDER32-'])]
-            DEBUFFS = [int(values['-SLIDER13-']), int(values['-SLIDER23-']), int(values['-SLIDER33-'])]
-            MAX_LEVELS_WORDS = [values['-YES-'], values['-YES-'], values['-YES-']]
+            functions.settings_set('MAX_LEVELS', [int(values['-SLIDER11-']), int(values['-SLIDER21-']), int(values['-SLIDER31-'])])
+            functions.settings_set('BUFFS', [int(values['-SLIDER12-']), int(values['-SLIDER22-']), int(values['-SLIDER32-'])])
+            functions.settings_set('DEBUFFS', [int(values['-SLIDER13-']), int(values['-SLIDER23-']), int(values['-SLIDER33-'])])
+            functions.settings_set('MAX_LEVELS_WORDS', [int(values['-YES-']), int(values['-YES-']), int(values['-YES-'])])
+            functions.reset_levels(MAX_LEVELS)
             settings_window.close()
             main_window()
             break
         if event == "Reset to Default":
-            MAX_LEVELS = [5, 10, 10]
-            BUFFS = [1, 1, 1]
-            DEBUFFS = [-1, -1, -1]
-            MAX_LEVELS_WORDS = [True, True, True]
+            functions.settings_set('MAX_LEVELS', [5, 10, 10])
+            functions.settings_set('BUFFS', [1, 1, 1])
+            functions.settings_set('DEBUFFS', [-1, -1, -1])
+            functions.settings_set('MAX_LEVELS_WORDS', [0, 1, 1])
+            functions.reset_levels(MAX_LEVELS)
             settings_window.close()
             settings_window()
 
@@ -291,10 +298,5 @@ def settings_window():
 
 
 if __name__ == "__main__":
-    MAX_LEVELS = [5, 10, 10]
-    BUFFS = [1, 1, 1]
-    DEBUFFS = [-1, -1, -1]
-    MAX_LEVELS_WORDS = [False, True, True]
-    # Ensure that the global variables are accessible
     main_window()
 
