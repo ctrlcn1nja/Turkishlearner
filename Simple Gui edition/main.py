@@ -1,8 +1,6 @@
 import PySimpleGUI as gui
 import pygame
 import  functions
-import uuid # for generating unique file names
-
 
 pygame.init()
 pygame.mixer.init()
@@ -42,7 +40,7 @@ def main_window():
             settings_window()
 
 def turkish_spelling():
-    word = functions.random_word(3)
+    word = functions.random_word(1)
     layout = [
         [gui.Text("Welcome to the Turkish spelling screen", font=("Helvetica", 16), justification='center',
                  size=(40, 1))],
@@ -59,7 +57,9 @@ def turkish_spelling():
         if event == gui.WIN_CLOSED:
             break
         if event == "Complete":
-            functions.adjust_data(word[0], 'up', 1)
+            functions.make_word_max_level(word[0], 1)
+            window.close()
+            turkish_spelling()
         if event == "BACK":
             window.close()
             main_window()
@@ -262,7 +262,7 @@ def settings_window():
     ]
 
     settings_layout = [
-        [gui.TabGroup([[gui.Tab('Turkish Spelling',  tab1_layout, font=("Helvetica", 32)), gui.Tab('Turkish to Russian (options)', tab2_layout, font=("Helvetica", 32)), gui.Tab('Russian to Turkish (options)', tab3_layout, font=("Helvetica", 32))]], size=(800, 600))],
+        [gui.TabGroup([[gui.Tab('Turkish Spelling',  tab1_layout, font=("Helvetica", 32)), gui.Tab('Russian to Turkish (options)', tab2_layout, font=("Helvetica", 32)), gui.Tab('Turkish to Russian (options)', tab3_layout, font=("Helvetica", 32))]], size=(800, 600))],
         [gui.Button("Save"), gui.Button("Cancel"), gui.Button("Reset to Default")]
     ]
 

@@ -20,7 +20,8 @@ def perfect_word(word):
 
     while word[0] == ' ':
         word = word[1:]
-    #print(word.lower())
+
+    word = word.replace('İ', 'i')
     return word.lower()
 
 def show_levels(data):
@@ -62,7 +63,7 @@ def adjust_data(random_word, direction, mode):
         if data_slice[0] == random_word:
             if direction == 'up':
                 buff = settings_get('BUFFS')[mode - 1]
-                data['Sheet1'][index][column] = min(1024, data['Sheet1'][index][column] * buff)
+                data['Sheet1'][index][column] = min(2 ** (settings_get('MAX_LEVELS')[mode - 1] - 1), data['Sheet1'][index][column] * buff)
             else:
                 debuff = settings_get('DEBUFFS')[mode - 1]
                 data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // debuff)
@@ -71,18 +72,37 @@ def adjust_data(random_word, direction, mode):
     save_data("tk_words.ods", data)
 
 
+def make_word_max_level(word, mode):
+    if mode == 1:
+        column = 4
+    elif mode == 2:
+        column = 3
+    else:
+        column = 2
+    data = get_data("tk_words.ods")
+    index = 1
+    for data_slice in data['Sheet1'][1:]:
+        if data_slice[0] == word:
+            data['Sheet1'][index][column] = 2 ** (settings_get('MAX_LEVELS')[mode - 1] - 1)
+            break
+        index += 1
+    save_data("tk_words.ods", data)
+
+
 def reset_levels(MAX_LEVELS):
     data = get_data("tk_words.ods")
     for data_slice in data['Sheet1'][1:]:
-        data_slice[3] = min(2 ** (MAX_LEVELS[2] - 1), data_slice[2]) # Rus-Turk
-        data_slice[2] = min(2 ** (MAX_LEVELS[1] - 1), data_slice[3]) # Turk-Rus
+        data_slice[2] = min(2 ** (MAX_LEVELS[2] - 1), data_slice[2]) # Turk-Rus
+        data_slice[3] = min(2 ** (MAX_LEVELS[1] - 1), data_slice[3]) # Rus-Turk
         data_slice[4] = min(2 ** (MAX_LEVELS[0] - 1), data_slice[4]) # spelling
     save_data("tk_words.ods", data)
 
 
 def random_word(mode):
+    column = 5 - mode
+    max_weight = 2 ** (settings_get('MAX_LEVELS')[mode - 1] + settings_get('MAX_LEVELS_WORDS')[mode - 1] - 2)
     data = get_data("tk_words.ods")
-    weights = [8 // int(x[mode + 1]) for x in data['Sheet1'][1:]]
+    weights = [max_weight // int(x[column]) for x in data['Sheet1'][1:]]
     random_word = random.choices(data['Sheet1'][1:], weights=weights)[0]
     return random_word
 
