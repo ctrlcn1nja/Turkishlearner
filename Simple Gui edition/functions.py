@@ -61,12 +61,15 @@ def adjust_data(random_word, direction, mode):
     index = 1
     for data_slice in data['Sheet1'][1:]:
         if data_slice[0] == random_word:
+            print(data_slice)
+            print(direction)
             if direction == 'up':
-                buff = settings_get('BUFFS')[mode - 1]
+                buff = 2 ** settings_get('BUFFS')[mode - 1]
                 data['Sheet1'][index][column] = min(2 ** (settings_get('MAX_LEVELS')[mode - 1] - 1), data['Sheet1'][index][column] * buff)
             else:
-                debuff = settings_get('DEBUFFS')[mode - 1]
+                debuff = 2 ** (-settings_get('DEBUFFS')[mode - 1])
                 data['Sheet1'][index][column] = max(1, data['Sheet1'][index][column] // debuff)
+            print(data['Sheet1'][index])
             break
         index += 1
     save_data("tk_words.ods", data)
