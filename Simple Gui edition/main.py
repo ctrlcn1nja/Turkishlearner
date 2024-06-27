@@ -43,16 +43,20 @@ def turkish_spelling():
     word = functions.random_word(1)
     layout = [
         [gui.Text("Welcome to the Turkish spelling screen", font=("Helvetica", 16), justification='center',
-                 size=(40, 1))],
+                  size=(40, 1))],
         [gui.Text("Please spell the following word:", font=("Helvetica", 16), justification='center', size=(40, 1))],
-        [gui.Text(word[1], font=("Helvetica", 18), background_color='black', justification='center', size=(25, 1)), gui.Button(image_filename='complete.png', key='Complete',size=(10, 1))],
-        [gui.InputText(enable_events=True, focus=True, font=("Helvetica", 18), justification='center', size=(30, 1))],
+        [gui.Text(word[1], font=("Helvetica", 18), background_color='black', justification='center', size=(25, 1)),
+         gui.Button(image_filename='complete.png', key='Complete', size=(10, 1))],
+        [gui.InputText(enable_events=True, focus=True, font=("Helvetica", 18), justification='center', size=(30, 1),
+                       key='InputField')],
         [gui.Button("BACK", size=(23, 2)), gui.Button("ENTER", size=(23, 2))]
     ]
 
     window = gui.Window("Turkish Spelling", layout, element_justification='center', return_keyboard_events=True,
-                       finalize=True)
+                        finalize=True)
+
     while True:
+        window['InputField'].SetFocus()
         event, values = window.read()
         if event == gui.WIN_CLOSED:
             break
@@ -65,7 +69,7 @@ def turkish_spelling():
             main_window()
             break
         if event == "ENTER" or event == "\r":
-            if functions.perfect_word(values[0]) == functions.perfect_word(word[0]):
+            if functions.perfect_word(values['InputField']) == functions.perfect_word(word[0]):
                 pygame.mixer.music.load('correct_sound_1.wav')
                 pygame.mixer.music.play()
                 functions.adjust_data(word[0], 'up', 1)
@@ -79,7 +83,6 @@ def turkish_spelling():
                 functions.adjust_data(word[0], 'down', 1)
                 window.close()
                 turkish_spelling()
-                break
 
 
 def levels_window():
